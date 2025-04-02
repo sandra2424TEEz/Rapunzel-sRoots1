@@ -1,0 +1,115 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} About {% endblock title %}
+
+{% block usernav %}
+<li class="nav-item">
+  <a class="nav-link active" aria-current="page" href="/">Home</a>
+</li>
+
+<li class="nav-item dropdown mx-2">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Products
+  </a>
+
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HM' %}">Hair Mask</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
+    <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
+</ul>
+</li>
+<li class="nav-item">
+  <a class="nav-link text-white" href="{% url 'about'  %}">About Us</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link text-white" href="{% url 'contact'  %}">Contact Us</a>
+</li>
+
+</ul>
+<form class="d-flex" role="search" action="/search">
+  <input class="form-control me-2" type="search" placeholder="Search"  name="search" aria-label="Search">
+  <button class="btn btn-outline-dark" type="submit">Search</button>
+</form>
+</div>
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<li class="nav-item dropdown mx-2">
+  <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+  <i class="fa-regular fa-user"></i> {{request.user}}
+
+  </a>
+  <ul class="dropdown-menu " aria-labelledby="profileDropdown" >
+      <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+      <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
+      <li><a class="dropdown-item" href="/logout/">Logout</a></li>
+  </ul>
+
+</li>
+<li class="nav-item mx-2">
+  <a href="{% url 'showcart' %}" class="nav-link text-white"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"  ></i> </a>
+
+</li>
+<li class="nav-item mx-2">
+  <a href="" class="nav-link text-white"><span class="badge bg-danger">{% if  wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
+
+</li>
+{% endblock %}
+
+
+{% block banner-slider %}
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'images/banner/b1.jpg'  %}" class="d-block w-100"  width="100" height="300" alt="bannerimages">
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'images/banner/b2.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages">
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'images/banner/b3.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages ">
+      </div>
+      <div class="carousel-item">
+         <img src="{% static 'images/banner/b4.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages ">
+       </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+    
+{% endblock banner-slider %}
+
+
+{% block main-content %}
+<div class="container mt-3">
+    <br>
+    <h2 class="text-center">Contact Us</h2>
+    <br>
+    <div class="row container">
+        <p class="fs-4 text-center " ><b>Address</b><i class="fa-solid fa-address-book"></i> :Malappuram ,Kerala</p>
+        <p class="fs-4 text-center"><b>Contact</b><i class="fa-solid fa-phone"></i> :9497580865</p>
+        <p class="fs-4 text-center"><b>Email</b><i class="fa-regular fa-envelope"></i> :Rootsbiotics@gmail.com</p>
+    </div>
+</div>
+
+<br><br>
+{% endblock main-content %}

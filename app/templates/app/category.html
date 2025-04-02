@@ -1,0 +1,74 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Hair Oil Products{% endblock title %}
+
+{% block usernav %}
+<li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="/">Home</a>
+</li>
+
+<li class="nav-item dropdown mx-2">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Products
+    </a>
+
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HM' %}">Hair Mask</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
+    </ul>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-white" href="{% url 'about' %}">About Us</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-white" href="{% url 'contact' %}">Contact Us</a>
+</li>
+{% endblock %}
+
+
+{% block main-content %}
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="list-group">
+                    <h5 class="mb-3">Product Categories</h5>
+                    {% for code, name in category_choices %}
+                    <a href="{% url 'category' code %}" class="list-group-item list-group-item-action {% if request.GET.category == code %}active{% endif %}" aria-current="true">{{ name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <h3 class="text-center mb-4">{% if category_name %}{{ category_name }}{% else %}All Products{% endif %}</h3>
+                <div class="row">
+                    {% for prod in product %}
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="card shadow-sm h-100">
+                                <a href="{% url 'product-detail' prod.id %}" class="btn p-0">
+                                    <img src="{{ prod.product_image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ prod.title }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ prod.title }}</h5>
+                                        <div class="fw-bold text-danger">
+                                            Rs.{{ prod.discounted_price }}/-
+                                            <small class="fw-light text-decoration-line-through text-muted">Rs.{{ prod.selling_price }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center">
+                            <p>No products found in this category.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main-content %}
