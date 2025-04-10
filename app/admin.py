@@ -29,3 +29,20 @@ class OrderPlacedModelAdmin(admin.ModelAdmin):
 @admin.register(Wishlist)
 class WishlistModeAdmin(admin.ModelAdmin):
     list_display = ['id','user','product']
+from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+
+class CustomAdminSite(admin.AdminSite):
+    def get_urls(self):
+        from django.urls import path
+        urls = super().get_urls()
+        custom_urls = [
+            path('app/', self.admin_view(admin_dashboard), name='admin-dashboard'),
+        ]
+        return custom_urls + urls
+
+admin.site.site_header = "E-Commerce Admin"
+admin.site.site_title = "E-Commerce Dashboard"
+admin.site.index_title = format_html('<a href="/admin-dashboard/">Go to Admin Dashboard</a>')
+

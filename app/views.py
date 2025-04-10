@@ -339,23 +339,51 @@ class CheckoutView(View):
         
         return render(request, 'app/checkout.html', locals())
 
-       
+from django.contrib.auth import login
+
 def payment_done(request):
-    order_id=request.GET.get('order_id')
-    payment_id=request.GET.get('payment_id')
-    cust_id=request.GET.get('cust_id')
-    user=request.user
-    customer=Customer.objects.get(id=cust_id)
-    payment=Payment.objects.get(razorpay_order_id=order_id)
-    payment.paid=True
-    payment.razorpay_payment_id=payment_id
-    payment.save()
-    cart=Cart.objects.filter(user=user)
-    for c in cart:  
-        OrderPlaced.objects.create(user=user,customer=customer,product=c.product,quantity=c.quantity,payment=payment).save()
-        c.delete()
+    if not request.user.is_authenticated:
+        # Try to get user from session
+        user_id = request.session.get('_auth_user_id')
+        if user_id:
+            user = User.objects.get(pk=user_id)
+            login(request, user)  # Re-authenticate user
+        else:
+            return redirect('login')  # Redirect to login if session is lost
+
+    order_id = request.GET.get('order_id')
+    payment_id = request.GET.get('payment_id')
+    cust_id = request.GET.get('cust_id')
+
+    user = request.user  # Ensure user is authenticated
+
+    try:
+        customer = Customer.objects.get(id=cust_id)
+        payment = Payment.objects.get(razorpay_order_id=order_id)
+        payment.paid = True  # Mark payment as successful
+        payment.razorpay_payment_id = payment_id
+        payment.save()
+
+        cart = Cart.objects.filter(user=user)
+        for c in cart:
+            OrderPlaced.objects.create(
+                user=user,
+                customer=customer,
+                product=c.product,
+                quantity=c.quantity,
+                payment=payment
+            ).save()
+            c.delete()  # Clear cart after placing order
         
-    return redirect('orders')
+        return redirect('orders')  # Redirect to orders page
+
+    except Customer.DoesNotExist:
+        messages.error(request, "Customer not found.")
+        return redirect('home')
+
+    except Payment.DoesNotExist:
+        messages.error(request, "Payment details not found.")
+        return redirect('home')
 
 
 def order_confirmation(request):
@@ -423,3 +451,54 @@ def search(request):
         totalitem = len(Cart.objects.filter(user=request.user))
     product = Product.objects.filter(Q(title__icontains=query))
     return render(request,'app/search.html',locals())
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import models
+from .models import Product, OrderPlaced, Customer, Payment
+from .forms import ProductForm
+
+# Ensure only admin users can access the dashboard
+def admin_required(user):
+    return user.is_staff  # Only allow staff members (admin) to access
+
+@user_passes_test(admin_required)
+def admin_dashboard(request):
+    total_products = Product.objects.count()
+    total_orders = Payment.objects.count()
+    total_customers = Customer.objects.count()
+    total_revenue = Payment.objects.filter(paid=True).aggregate(total_amount=models.Sum('amount'))['total_amount'] or 0
+    pending_orders = OrderPlaced.objects.filter(status='Pending').count()
+
+    # Product form for adding a product
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')  # Redirect to refresh the dashboard
+    else:
+        form = ProductForm()
+
+    context = {
+        'total_products': total_products,
+        'total_orders': total_orders,
+        'total_customers': total_customers,
+        'total_revenue': total_revenue,
+        'pending_orders': pending_orders,
+        'form': form,  # Pass form to template
+    }
+    
+    return render(request, 'app/admin_dashboard.html', context)
+
+
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from .models import Cart
+
+@login_required
+def clear_cart(request):
+    # Delete all cart items for the logged-in user
+    Cart.objects.filter(user=request.user).delete()
+    return redirect('orders')  # Redirect to cart or any desired page

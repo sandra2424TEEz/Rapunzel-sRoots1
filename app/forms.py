@@ -30,6 +30,13 @@ class MyPasswordResetForm(PasswordResetForm):
 class MySetPasswordForm(SetPasswordForm):
     new_password1= forms.CharField( label=' New Password',widget=forms.PasswordInput(attrs={ 'autocomplete':'current-password','class':'form-control' }))
     new_password2= forms.CharField( label='  Confirm New Password',widget=forms.PasswordInput(attrs={ 'autocomplete':'current-password','class':'form-control' }))
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['title', 'selling_price', 'discounted_price', 'description', 'stock', 'category', 'product_image']
 
 class CustomerProfileForm(forms.ModelForm):
     class Meta:

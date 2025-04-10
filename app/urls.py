@@ -23,10 +23,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_view 
 from .forms import LoginForm,MyPasswordResetForm,MyPasswordChangeForm,MySetPasswordForm,PasswordResetForm
+from .views import admin_dashboard
 
 
 urlpatterns = [
-    path('',views.home),
+    path('',views.home,name='home'),
     path('about/',views.about,name='about'),
     path('contact/',views.contact,name='contact'),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
@@ -47,15 +48,19 @@ urlpatterns = [
     path('pluswishlist/',views.plus_wishlist),
     path('minuswishlist/',views.minus_wishlist),
     path('search/',views.search,name='search'),
+        path('clear-cart/', views.clear_cart, name='clear_cart'),
+
 
     #login authentication
     path('registration/', views.CustomerRegistrationView.as_view(), name='customerregistration'),
     path('login/',auth_view.LoginView.as_view(template_name='app/login.html',authentication_form=LoginForm),name='login'),
-    
+    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
+
+
     path('passwordchange/',auth_view.PasswordChangeView.as_view(template_name='app/changepassword.html',form_class=MyPasswordChangeForm,success_url='/passwordchangedone'),name='passwordchange'),
     path('passwordchangedone/',auth_view.PasswordChangeDoneView.as_view(template_name='app/passwordchangedone.html'),name='passwordchangedone'),
     path('logout/',views.Logout,name='logout'),
-
+    
 
     path('password-reset/',auth_view.PasswordResetView.as_view(template_name='app/password_reset.html',form_class=MyPasswordResetForm), name='password-reset'),
 

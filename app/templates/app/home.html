@@ -6,12 +6,8 @@
 
 
 {% block usernav %}
-
-    
- 
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Your Brand</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -25,7 +21,6 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Products
                     </a>
-
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
@@ -33,48 +28,59 @@
                         <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
+                        {% comment %} <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li> {% endcomment %}
                     </ul>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'about'  %}">About Us</a>
+                    <a class="nav-link text-white" href="{% url 'about' %}">About Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'contact'  %}">Contact Us</a>
+                    <a class="nav-link text-white" href="{% url 'contact' %}">Contact Us</a>
                 </li>
 
+                {% if request.user.is_authenticated and request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                </li>
+                {% endif %}
             </ul>
+
             <form class="d-flex" role="search" action="/search">
-                <input class="form-control me-2" type="search" placeholder="Search"  name="search" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="Search" name="search" aria-label="Search">
                 <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
         </div>
+
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown mx-2">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-regular fa-user"></i> {{request.user}}
-
+                    <i class="fa-regular fa-user"></i> {{ request.user }}
                 </a>
-                <ul class="dropdown-menu " aria-labelledby="profileDropdown" >
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
                     <li><a class="dropdown-item" href="/logout/">Logout</a></li>
                 </ul>
-
             </li>
             <li class="nav-item mx-2">
-                <a href="{% url 'showcart' %}" class="nav-link text-white"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"  ></i> </a>
-
+                <a href="{% url 'showcart' %}" class="nav-link text-white">
+                    <span class="badge bg-danger">{% if totalitem > 0 %}{{ totalitem }}{% endif %}</span>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
             </li>
             <li class="nav-item mx-2">
-                <a href="" class="nav-link text-white"><span class="badge bg-danger">{% if  wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
-
+                <a href="" class="nav-link text-white">
+                    <span class="badge bg-danger">{% if wishlist_count > 0 %}{{ wishlist_count }}{% endif %}</span>
+                    <i class="fa fa-heart"></i>
+                </a>
             </li>
         </ul>
     </div>
 </nav>
 {% endblock %}
+
 <br><br><br><br>
 {% block banner-slider %}
 <style>
@@ -242,8 +248,7 @@
 <div class="container-fluid p-0">
     <div class="row information-section" style="height=10%;">
         <h1>Products</h1>
-        <small class="fs-5">Dairy products encompass a diverse range of food items derived from milk. These products are rich in essential nutrients such as calcium, protein, vitamins, and minerals. Here are descriptions of some common dairy products: Milk,Ice-cream,Yogurt,Cheese,Butter,Panner etc.
-            These dairy products contribute not only to the flavor and texture of various dishes but also provide essential nutrients that are beneficial for overall health.
+        <small class="fs-5">Unleash the beauty of your hair with Rapunzels Roots, where ancient wisdom meets modern hair care. Our collection is designed to nurture your scalp and hair follicles, encouraging strong, healthy growth from the roots. Explore our range of enriching hair oils, deeply conditioning masks, and gentle cleansing formulas, all made with natural extracts and nourishing botanicals. Experience the difference that root-to-tip care can make with Rapunzels Roots, and let your hair tell its own story of health.
         </small>
     </div>
 
@@ -407,7 +412,7 @@
     <div class="row container">
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk curdbgpro">
-                <a href="{% url 'category' 'GH' %}">
+                <a href="{% url 'category' 'HO' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/oil.jpg' %}" class="img-responsive" alt="">
                         <p class="mlkpro">Hair Oil</p>
@@ -417,7 +422,7 @@
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk smbg">
-                <a href="{% url 'category' 'CR' %}">
+                <a href="{% url 'category' 'HS' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/serum.jpg' %}" class="img-responsive text-center" alt="">
                         <p class="mlkpro">Hair Serum</p>
@@ -427,7 +432,7 @@
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk buttermilk">
-                <a href="{% url 'category' 'Ic' %}">
+                <a href="{% url 'category' 'HM' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/hairmask.jpg' %}" class="img-responsive text-center" alt="">
                         <p class="mlkpro">Hair Mask</p>
@@ -440,7 +445,7 @@
     <div class="row container">
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk curdbgpro">
-                <a href="{% url 'category' 'MS' %}">
+                <a href="{% url 'category' 'HC' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/hairconditioner.jpg' %}" class="img-responsive" alt="">
                         <p class="mlkpro">Hair Conditioner</p>
@@ -450,7 +455,7 @@
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk smbg">
-                <a href="{% url 'category' 'ML' %}">
+                <a href="{% url 'category' 'SH' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/shampoo.jpg' %}" class="img-responsive text-center" alt="">
                         <p class="mlkpro">Shampoo</p>
@@ -460,7 +465,7 @@
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
             <div class="goodnesssec buttermilk buttermilk">
-                <a href="{% url 'category' 'Ic' %}">
+                <a href="{% url 'category' 'HB' %}">
                     <div class="goodnessseccont text-center">
                         <img src="{% static 'images/hairbutter.jpg' %}" class="img-responsive text-center" alt="">
                         <p class="mlkpro">Hair Butter</p>

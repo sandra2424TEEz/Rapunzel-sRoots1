@@ -1,128 +1,411 @@
 {% extends 'app/base.html' %}
 {% load static %}
-{% block title %} About {% endblock title %}
+{% block title %} About Raupenzil Hair {% endblock title %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+    /* Banner Text Overlay Styles */
+    .banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 10%;
+        color: white;
+        text-align: left;
+        z-index: 10;
+        background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .banner-text-container {
+        max-width: 600px;
+    }
+
+    .banner-title {
+        font-size: 4.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .banner-subtitle {
+        font-size: 1.6rem;
+        margin-top: 10px;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+        line-height: 1.4;
+        font-weight: 300;
+    }
+
+    /* Section Styles */
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background-color: #7b5c43;
+    }
+
+    .centered-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Card Styles */
+    .content-card {
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: #f9f7f5;
+        padding: 2.5rem;
+        height: 100%;
+    }
+
+    .content-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+        background-color: #7b5c43;
+        border-color: #7b5c43;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #614936;
+        border-color: #614936;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(123, 92, 67, 0.3);
+    }
+
+    /* Image Styles */
+    .img-container {
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .feature-image {
+        transition: transform 0.5s ease;
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .img-container:hover .feature-image {
+        transform: scale(1.03);
+    }
+
+    /* Animation classes */
+    .anim-element {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .anim-element.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Typography */
+    p {
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .lead {
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: #333;
+    }
+
+    /* Accent Elements */
+    .accent-bg {
+        background-color: #f9f4f0;
+    }
+
+    .quote-block {
+        font-style: italic;
+        padding: 2rem;
+        border-left: 4px solid #7b5c43;
+        background-color: #fff;
+        margin: 2rem 0;
+    }
+</style>
+{% endblock %}
 
 {% block usernav %}
 <li class="nav-item">
-  <a class="nav-link active" aria-current="page" href="/">Home</a>
+    <a class="nav-link active" aria-current="page" href="/">Home</a>
 </li>
 
 <li class="nav-item dropdown mx-2">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Products
-  </a>
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Products
+    </a>
 
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HM' %}">Hair Mask</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
-</ul>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HM' %}">Hair Mask</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
+        <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
+    </ul>
 </li>
 <li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'about'  %}">About Us</a>
+    <a class="nav-link" href="{% url 'about' %}">About Us</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'contact'  %}">Contact Us</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
 </li>
 </ul>
 <form class="d-flex" role="search" action="/search">
-  <input class="form-control me-2" type="search" placeholder="Search"  name="search" aria-label="Search">
-  <button class="btn btn-outline-dark" type="submit">Search</button>
+    <input class="form-control me-2" type="search" placeholder="Search" name="search" aria-label="Search">
+    <button class="btn btn-outline-primary" type="submit">Search</button>
 </form>
 </div>
+
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 <li class="nav-item dropdown mx-2">
-  <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-  <i class="fa-regular fa-user"></i> {{request.user}}
-
-  </a>
-  <ul class="dropdown-menu " aria-labelledby="profileDropdown" >
-      <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-      <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
-      <li><a class="dropdown-item" href="/logout/">Logout</a></li>
-  </ul>
-
+    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="fa-regular fa-user"></i> {{request.user}}
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
+        <li><a class="dropdown-item" href="/logout/">Logout</a></li>
+    </ul>
 </li>
 <li class="nav-item mx-2">
-  <a href="{% url 'showcart' %}" class="nav-link text-white"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"  ></i> </a>
-
+    <a href="{% url 'showcart' %}" class="nav-link"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"></i> </a>
 </li>
 <li class="nav-item mx-2">
-  <a href="" class="nav-link text-white"><span class="badge bg-danger">{% if  wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
-
+    <a href="" class="nav-link"><span class="badge bg-danger">{% if wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
 </li>
 {% endblock %}
-
-
 {% block banner-slider %}
-
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-      
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
     </div>
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="{% static 'images/banner/b1.jpg'  %}" class="d-block w-100"  width="100" height="300" alt="bannerimages">
-      </div>
-      <div class="carousel-item">
-        <img src="{% static 'images/banner/b2.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages">
-      </div>
-      <div class="carousel-item">
-        <img src="{% static 'images/banner/b3.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages ">
-      </div>
-      <div class="carousel-item">
-         <img src="{% static 'images/banner/b4.jpg' %}" class="d-block w-100"  width="100" height="300" alt="bannerimages ">
-       </div>
+        <div class="carousel-item active">
+            <img src="{% static 'images/banner/b1.jpg' %}" class="d-block w-100" alt="Banner 1" style="max-height: 600px; object-fit: cover;">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/banner/b2.jpg' %}" class="d-block w-100" alt="Banner 2" style="max-height: 600px; object-fit: cover;">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/banner/b3.jpg' %}" class="d-block w-100" alt="Banner 3" style="max-height: 600px; object-fit: cover;">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/banner/b4.jpg' %}" class="d-block w-100" alt="Banner 4" style="max-height: 600px; object-fit: cover;">
+        </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
     </button>
-  </div>
+</div>
 
-    
+<!-- Banner text moved below carousel -->
+<div class="banner-text-section py-4 bg-light">
+    <div class="container">
+        <div class="banner-text-container text-center">
+            <h1 class="banner-title text-dark">About Raupenzil Hair</h1>
+            <p class="banner-subtitle text-dark">Discover our journey to natural hair excellence</p>
+        </div>
+    </div>
+</div>
 {% endblock banner-slider %}
 
 {% block main-content %}
-<div class="container mt-3">
-    <br>
-    <h2 class="text-center ">About Us</h2>
-    <br>
-    <div class="row container " >
-        <p class="fs-4 text-center " >This is a public limited company having its  registered and corporate office at 
-        Mumbai city of Maharashtra State in India. The company was incorporated in the year
-        2023 and production commenced in 2024.
-        This is one of the fasrest growing public listed companies in mumbai.
-        </p>
-
+<div class="container py-5">
+    <!-- Our Story Section -->
+    <div class="row align-items-center mb-5 py-4">
+        <div class="col-lg-6 mb-4 mb-lg-0 anim-element" id="story-image">
+            <div class="img-container">
+                <img src="{% static 'images/about/about-us.jpg' %}" alt="About Raupenzil Hair" class="feature-image">
+            </div>
+        </div>
+        <div class="col-lg-6 anim-element" id="story-text">
+            <h2 class="section-title fw-bold" id="our-story-heading">Our Story</h2>
+            <p class="lead mb-4">
+                At Raupenzil Hair, our journey began with a simple yet powerful vision: to unlock the secret to naturally beautiful and healthy hair for everyone.
+            </p>
+            <p class="mb-3">
+                Inspired by the legendary tale of Rapunzel and her enchanting locks, we set out to create a hair care line that embodies strength, vitality, and radiant beauty.
+            </p>
+            <p>
+                We believe that your hair is your crowning glory, and it deserves the best care nature can offer.
+            </p>
+            <div class="quote-block mt-4">
+                "Nature holds the key to beautiful hair. We're simply unlocking its potential."
+            </div>
+        </div>
     </div>
-       <br><br>
-    <h2 class="text-center">Mission</h2>
-    <br>
-    <div class="row container">
-        <p class="fs-4 text-center">To embrace the right technology to delight our customers
-            Empowering the farmer community through our unique 'Relationship Farming' Model
-            To anticipate, understand and respond to our customers' needs by creating high-quality products and making them available through innovative and convenient channels
-        </p>
+
+    <!-- Our Philosophy Section -->
+    <div class="row py-5 accent-bg rounded">
+        <div class="col-12">
+            <div class="content-card anim-element" id="philosophy">
+                <h2 class="section-title centered-title fw-bold text-center">Our Philosophy</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="text-center mb-3">
+                            <i class="fa fa-leaf fa-3x" style="color: #7b5c43;"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Nature's Power</h4>
+                        <p class="text-center">
+                            We harness the power of nature to create effective and gentle hair care solutions with premium botanical extracts, nourishing oils, and essential vitamins.
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="text-center mb-3">
+                            <i class="fa fa-flask fa-3x" style="color: #7b5c43;"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Clean Formulations</h4>
+                        <p class="text-center">
+                            We are committed to avoiding harsh chemicals, sulfates, and parabens, ensuring that our products are kind to your hair and the environment.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fa fa-heart fa-3x" style="color: #7b5c43;"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Hair Health</h4>
+                        <p class="text-center">
+                            Our philosophy is rooted in the belief that healthy hair starts with natural care, improving overall hair health and resilience from root to tip.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- What Makes Us Special Section -->
+    <div class="row py-5 align-items-center">
+        <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0 anim-element" id="special-image">
+            <div class="img-container">
+                <img src="{% static 'images/about/special.jpg' %}" alt="What makes us special" class="feature-image">
+            </div>
+        </div>
+        <div class="col-lg-6 order-lg-1 anim-element" id="special-text">
+            <h2 class="section-title fw-bold">What Makes Raupenzil Hair Special?</h2>
+            <p class="mb-3">
+                Raupenzil Hair stands out for its commitment to quality, natural ingredients, and visible results. Our unique formulations are designed to address a wide range of hair concerns, including dryness, damage, frizz, dullness, and hair fall.
+            </p>
+            <p class="mb-3">
+                Whether you desire long, flowing locks or simply want to revitalize your existing hair, Raupenzil Hair offers a tailored solution for your specific needs.
+            </p>
+            <p>
+                We pride ourselves on our rigorous research and development process, ensuring that each Raupenzil Hair product is effective, safe, and a delight to use. Experience the difference that natural, high-quality hair care can make.
+            </p>
+            <div class="mt-4 d-flex flex-wrap">
+                <div class="me-4 mb-3">
+                    <span class="badge bg-light text-dark p-2 rounded-pill" style="border: 1px solid #7b5c43;">
+                        <i class="fa fa-check me-1" style="color: #7b5c43;"></i> Premium Quality
+                    </span>
+                </div>
+                <div class="me-4 mb-3">
+                    <span class="badge bg-light text-dark p-2 rounded-pill" style="border: 1px solid #7b5c43;">
+                        <i class="fa fa-check me-1" style="color: #7b5c43;"></i> Cruelty-Free
+                    </span>
+                </div>
+                <div class="me-4 mb-3">
+                    <span class="badge bg-light text-dark p-2 rounded-pill" style="border: 1px solid #7b5c43;">
+                        <i class="fa fa-check me-1" style="color: #7b5c43;"></i> Paraben-Free
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <span class="badge bg-light text-dark p-2 rounded-pill" style="border: 1px solid #7b5c43;">
+                        <i class="fa fa-check me-1" style="color: #7b5c43;"></i> Sulfate-Free
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Commitment Section -->
+    <div class="row py-5 accent-bg rounded">
+        <div class="col-12">
+            <div class="content-card anim-element" id="commitment">
+                <h2 class="section-title centered-title fw-bold text-center">Our Commitment to You</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="fa fa-users fa-2x" style="color: #7b5c43;"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-3">Community First</h4>
+                                <p>
+                                    At Raupenzil Hair, we are more than just a brand – we are a community dedicated to helping you achieve your hair goals. We are committed to providing exceptional customer service and are always here to answer your questions and offer personalized advice.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="fa fa-globe fa-2x" style="color: #7b5c43;"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-3">Sustainable Practices</h4>
+                                <p>
+                                    We are deeply committed to sustainability and ethical practices. We strive to minimize our environmental footprint through responsible sourcing, eco-friendly packaging, and cruelty-free production methods that respect our planet.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="row mt-5 py-4">
+        <div class="col-12 text-center anim-element" id="cta">
+            <h3 class="fw-bold mb-4">Discover the magic of Raupenzil Hair</h3>
+            <p class="lead mb-4">
+                Unlock the secret to your most beautiful hair yet. Explore our range of shampoos, conditioners, serums, and treatments today!
+            </p>
+            <a href="/" class="btn btn-primary btn-lg px-5 py-3" id="shop-btn">Shop Now</a>
+        </div>
+    </div>
 </div>
 
-<br><br>
+
 {% endblock main-content %}

@@ -1,17 +1,19 @@
-{%  extends 'app/base.html'  %}
+{% extends 'app/base.html' %}
 
-{% load static  %}
+{% load static %}
 
-{% block title %}Category{% endblock title %}
+{% block title %}{{ product.title }}{% endblock title %}
 
 {% block usernav %}
 <li class="nav-item">
-  <a class="nav-link active" aria-current="page" href="/">Home</a>
+  <a class="nav-link active" aria-current="page" href="/">
+    <i class="fas fa-home me-1"></i> Home
+  </a>
 </li>
 
 <li class="nav-item dropdown mx-2">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Products
+    <i class="fas fa-shopping-basket me-1"></i> Products
   </a>
 
   <ul class="dropdown-menu">
@@ -23,79 +25,294 @@
     <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
     <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
     <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
-</ul>
+  </ul>
 </li>
 <li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'about'  %}">About Us</a>
+  <a class="nav-link text-white" href="{% url 'about' %}">
+    <i class="fas fa-info-circle me-1"></i> About Us
+  </a>
 </li>
 <li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'contact'  %}">Contact Us</a>
+  <a class="nav-link text-white" href="{% url 'contact' %}">
+    <i class="fas fa-envelope me-1"></i> Contact Us
+  </a>
 </li>
 <li class="nav-item">
   <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
 </li>
 </ul>
 <form class="d-flex" role="search" action="/search">
-  <input class="form-control me-2" type="search" placeholder="Search"  name="search" aria-label="Search">
-  <button class="btn btn-outline-dark" type="submit">Search</button>
+  <input class="form-control me-2" type="search" placeholder="Search" name="search" aria-label="Search">
+  <button class="btn btn-outline-light" type="submit">
+    <i class="fas fa-search"></i>
+  </button>
 </form>
 </div>
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 <li class="nav-item dropdown mx-2">
   <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="fa-regular fa-user"></i> {{request.user}}
-
   </a>
-  <ul class="dropdown-menu " aria-labelledby="profileDropdown" >
-      <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-      <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
-      <li><a class="dropdown-item" href="/logout/">Logout</a></li>
+  <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+    <li><a class="dropdown-item" href="{% url 'profile' %}">
+      <i class="fas fa-user-circle me-2"></i>Profile</a>
+    </li>
+    <li><a class="dropdown-item" href="{% url 'passwordchange' %}">
+      <i class="fas fa-key me-2"></i>Change Password</a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="/logout/">
+      <i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+    </li>
   </ul>
-
 </li>
 <li class="nav-item mx-2">
-  <a href="{% url 'showcart' %}" class="nav-link text-white"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"  ></i> </a>
-
+  <a href="{% url 'showcart' %}" class="nav-link text-white position-relative">
+    <i class="fa-solid fa-cart-shopping"></i>
+    {% if totalitem > 0 %}
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      {{totalitem}}
+    </span>
+    {% endif %}
+  </a>
 </li>
 <li class="nav-item mx-2">
-  <a href="" class="nav-link text-white"><span class="badge bg-danger">{% if  wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
-
+  <a href="" class="nav-link text-white position-relative">
+    <i class="fa fa-heart"></i>
+    {% if wishlist_count > 0 %}
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      {{wishlist_count}}
+    </span>
+    {% endif %}
+  </a>
 </li>
 {% endblock %}
 
+{% block main-content %}
+<div class="container py-5">
+  <!-- Breadcrumb navigation -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'category' product.category %}" class="text-decoration-none">
+        {% if product.category == 'HO' %}Hair Oil
+        {% elif product.category == 'HS' %}Hair Serum
+        {% elif product.category == 'HM' %}Hair Mask
+        {% elif product.category == 'HC' %}Hair Conditioner
+        {% elif product.category == 'SH' %}Shampoo
+        {% elif product.category == 'HB' %}Hair Butter
+        {% elif product.category == 'HD' %}Hair Dye
+        {% elif product.category == 'HT' %}Hair Treatment
+        {% else %}Products{% endif %}
+      </a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{product.title}}</li>
+    </ol>
+  </nav>
 
-{% block main-content %} 
-    <div class="container">
-        <div class="row flex justify-content-between">
-            <div class="img2 col-lg-5 mt-5">
-                <img src="{{product.product_image.url}}" class="image col-xs-6 col-sm-12 col-lg-12 mt-3 text-sm-center w-100 h-75" alt="">
-            </div>
-            <div class="productdetail col-lg-5">
-                <h1 style="font-family: Georgia; font-size: 50px;">{{product.title}}</h1>
-                <h5>Rs. {{product.discounted_price}}/-</h5>
-                <small class="text-decoration-line-through text-muted fs-5"><del>Rs. {{product.selling_price}}/-</small>
-                </del>
-                <br><br><h4>Product Features</h4>
-                <ul class="fs-5" style="font-family: Rajdhani;">
-                    <li>{{product.description}}</li>
-                </ul>
-                
-                <form action="/add-to-cart" class="d-inline">
-                  <input type="hidden" name="prod_id" value="{{product.id}}" />
-                  <button type="submit" class="btn btn-primary shadow-px-5 py-2">Add to Cart</button>
-                </form>
-                <a href="{% url 'showcart' %}" class="btn btn-warning shadow-px-5 py-2 ms-4">Buy Now</a>
-                <!-- <div class="ms-4"> -->
-                {% if wishlist %}
-                <a pid="{{product.id}}" class="minus-wishlist btn btn-danger shadow-px-5 py-2"><i class="fas fa-heart fa-lg"></i></a>
-                {% else %}
-                <a pid="{{product.id}}" class="plus-wishlist btn btn-success shadow-px-5 py-2"><i class="fas fa-heart fa-lg"></i></a>
-                {% endif %}
-                <!-- </div> -->
-              
-
-            </div>
+  <div class="row">
+    <!-- Product image section -->
+    <div class="col-lg-6 mb-5">
+      <div class="card border-0 shadow-sm">
+        <div class="position-relative">
+          <!-- Discount badge if product is on sale -->
+          {% if product.discounted_price < product.selling_price %}
+          <div class="position-absolute top-0 end-0 bg-danger text-white m-3 px-3 py-2 rounded-pill fs-6 fw-bold shadow-sm">
+            {% with discount=product.selling_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
+            {% with discounted=product.discounted_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
+            {% with percentage=discount|add:"-"|add:discounted|add:"*100/"|add:discount %}
+            {{ percentage|floatformat:0 }}% OFF
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+          </div>
+          {% endif %}
+          
+          <div class="product-image p-4">
+            <img src="{{product.product_image.url}}" class="img-fluid rounded product-img" alt="{{product.title}}">
+          </div>
         </div>
-
+        
+        <!-- Thumbnail navigation could be added here if there were multiple images -->
+        <div class="card-footer bg-white border-0 p-3">
+          <div class="d-flex justify-content-center">
+            <span class="text-muted">
+              <i class="fas fa-share-alt me-1"></i> Share:
+            </span>
+            <a href="#" class="ms-2 text-primary"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="ms-2 text-info"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="ms-2 text-danger"><i class="fab fa-pinterest"></i></a>
+            <a href="#" class="ms-2 text-success"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
     </div>
+    
+    <!-- Product details section -->
+    <div class="col-lg-6">
+      <div class="product-details ps-lg-4">
+        <!-- Product title -->
+        <h1 class="product-title mb-3 fw-bold">{{product.title}}</h1>
+        
+        <!-- Rating stars -->
+        <div class="product-rating mb-3">
+          <span class="text-warning">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </span>
+          <span class="ms-2 text-muted">(4.5/5)</span>
+          <span class="ms-2 text-primary">32 Reviews</span>
+        </div>
+        
+        <!-- Price -->
+        <div class="product-price mb-4">
+          <h2 class="text-danger fw-bold mb-0">₹{{product.discounted_price}}/-</h2>
+          {% if product.discounted_price < product.selling_price %}
+          <span class="text-muted text-decoration-line-through fs-5">₹{{product.selling_price}}/-</span>
+          {% endif %}
+        </div>
+        
+        <!-- Availability -->
+        <div class="product-stock mb-4">
+          <span class="badge bg-success p-2">
+            <i class="fas fa-check-circle me-1"></i> In Stock
+          </span>
+          <span class="text-muted ms-2">Ships within 2-3 business days</span>
+        </div>
+        
+        <!-- Divider -->
+        <hr class="my-4">
+        
+        <!-- Product description -->
+        <div class="product-description mb-4">
+          <h4 class="fw-bold mb-3">Product Features</h4>
+          <div class="feature-content fs-5">
+            {{product.description|linebreaks}}
+          </div>
+        </div>
+        
+        <!-- Quantity selector could be added here -->
+        
+        <!-- Action buttons -->
+        <div class="product-actions d-flex flex-wrap gap-2 mt-4">
+          <form action="/add-to-cart" class="d-inline">
+            <input type="hidden" name="prod_id" value="{{product.id}}" />
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-cart-plus me-2"></i>Add to Cart
+            </button>
+          </form>
+          
+          <a href="{% url 'showcart' %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-bolt me-2"></i>Buy Now
+          </a>
+          
+          {% if wishlist %}
+          <a pid="{{product.id}}" class="minus-wishlist btn btn-danger btn-lg">
+            <i class="fas fa-heart"></i>
+          </a>
+          {% else %}
+          <a pid="{{product.id}}" class="plus-wishlist btn btn-outline-danger btn-lg">
+            <i class="far fa-heart"></i>
+          </a>
+          {% endif %}
+        </div>
+        
+        <!-- Additional info sections -->
+        <div class="additional-info mt-5">
+          <div class="accordion" id="productAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <i class="fas fa-truck me-2"></i> Shipping & Returns
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#productAccordion">
+                <div class="accordion-body">
+                  <p>Free shipping on orders over ₹499. Standard delivery in 2-3 business days.</p>
+                  <p>Returns accepted within 30 days of delivery. See our <a href="#" class="text-decoration-none">return policy</a> for details.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <i class="fas fa-leaf me-2"></i> Key Ingredients
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#productAccordion">
+                <div class="accordion-body">
+                  <p>Our products are made with premium natural ingredients. 100% cruelty-free and sustainable.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Related products section could be added here -->
+</div>
+
+<style>
+  /* Product image styling */
+  .product-img {
+    transition: transform 0.3s ease;
+  }
+  
+  .product-image:hover .product-img {
+    transform: scale(1.05);
+  }
+  
+  /* Product title typography */
+  .product-title {
+    font-family: 'Georgia', serif;
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  /* Button styling */
+  .btn-primary, .btn-warning, .btn-danger, .btn-outline-danger {
+    border-radius: 4px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover, .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  /* Feature content styling */
+  .feature-content {
+    font-family: 'Rajdhani', sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Accordion styling */
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+  }
+  
+  .accordion-button:focus {
+    box-shadow: none;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .product-title {
+      font-size: 2rem;
+    }
+    
+    .product-details {
+      padding-left: 0;
+      margin-top: 2rem;
+    }
+  }
+</style>
 {% endblock main-content %}

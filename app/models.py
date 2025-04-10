@@ -40,7 +40,8 @@ class Customer(models.Model):
     name = models.CharField(max_length=200)
     locality = models.CharField(max_length=200)
     city = models.CharField(max_length=50)
-    mobile = models.IntegerField(default=0)
+    mobile = models.CharField(max_length=10)  
+
     zipcode= models.IntegerField()
     state = models.CharField(choices=STATE_CHOICES,max_length=100)
     def __str__(self):
@@ -73,7 +74,7 @@ class Payment(models.Model):
     razorpay_order_id = models.CharField(max_length=100,blank=True,null=True)
     razorpay_payment_status = models.CharField(max_length=100,blank=True,null=True)
     razorpay_payment_id = models.CharField(max_length=100,blank=True,null=True)
-    paid = models.BooleanField(default=False)
+    paid = models.BooleanField(default=True)
 
 
 
