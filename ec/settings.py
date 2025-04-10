@@ -12,6 +12,23 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+# settings.py
+
+
+
+# Gmail SMTP settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP server
+EMAIL_PORT = 587               # Port for sending email via TLS
+EMAIL_USE_TLS = True           # Use TLS (recommended for security)
+EMAIL_HOST_USER = 'rapunzelsroots@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'tcwz ddwb knyf jllr'  # Your Gmail password or app password (if you have 2-step verification)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_LOCALTIME = True
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +46,8 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+SESSION_COOKIE_AGE = 86400  
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,7 +153,5 @@ LOGIN_REDIRECT_URL = '/profile/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 RAZOR_KEY_ID = "rzp_test_9BZyJ3buu1pncT"
 RAZOR_KEY_SECRET = "6QKQl4eZL8qSwxmeZy02o4tv"

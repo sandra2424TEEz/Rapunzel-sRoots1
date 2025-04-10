@@ -70,12 +70,17 @@
                     <i class="fa-solid fa-cart-shopping"></i>
                 </a>
             </li>
-            <li class="nav-item mx-2">
-                <a href="" class="nav-link text-white">
-                    <span class="badge bg-danger">{% if wishlist_count > 0 %}{{ wishlist_count }}{% endif %}</span>
-                    <i class="fa fa-heart"></i>
-                </a>
-            </li>
+            <!-- Replace the wishlist link in your base.html navbar with this -->
+<li class="nav-item mx-2">
+    <a href="{% url 'wishlist' %}" class="nav-link text-white position-relative">
+      <i class="fa fa-heart"></i>
+      {% if wishlist_count > 0 %}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger wishlist-count">
+        {{wishlist_count}}
+      </span>
+      {% endif %}
+    </a>
+  </li>
         </ul>
     </div>
 </nav>
@@ -408,33 +413,39 @@
     }
 </style>
 <div class="container-fluid product-section">
-    <h2>Rapunzels Roots</h2>
-    <div class="row container">
+    <h2 class="text-center mb-4">Rapunzels Roots</h2>
+    <div class="row container mx-auto">
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk curdbgpro">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'HO' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/oil.jpg' %}" class="img-responsive" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/oil.jpg' %}" class="img-responsive mx-auto" alt="Hair Oil">
+                        </div>
                         <p class="mlkpro">Hair Oil</p>
                     </div>
                 </a>
             </div>
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk smbg">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'HS' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/serum.jpg' %}" class="img-responsive text-center" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/serum.jpg' %}" class="img-responsive mx-auto" alt="Hair Serum">
+                        </div>
                         <p class="mlkpro">Hair Serum</p>
                     </div>
                 </a>
             </div>
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk buttermilk">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'HM' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/hairmask.jpg' %}" class="img-responsive text-center" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/hairmask.jpg' %}" class="img-responsive mx-auto" alt="Hair Mask">
+                        </div>
                         <p class="mlkpro">Hair Mask</p>
                     </div>
                 </a>
@@ -442,32 +453,38 @@
         </div>
     </div>
     
-    <div class="row container">
+    <div class="row container mx-auto">
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk curdbgpro">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'HC' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/hairconditioner.jpg' %}" class="img-responsive" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/hairconditioner.jpg' %}" class="img-responsive mx-auto" alt="Hair Conditioner">
+                        </div>
                         <p class="mlkpro">Hair Conditioner</p>
                     </div>
                 </a>
             </div>
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk smbg">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'SH' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/shampoo.jpg' %}" class="img-responsive text-center" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/shampoo.jpg' %}" class="img-responsive mx-auto" alt="Shampoo">
+                        </div>
                         <p class="mlkpro">Shampoo</p>
                     </div>
                 </a>
             </div>
         </div>
         <div class="col-md-4 mi-go wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="animation-duration: 1s; animation-delay: 0.6s; animation-name: none;">
-            <div class="goodnesssec buttermilk buttermilk">
+            <div class="goodnesssec buttermilk curdbgpro text-center">
                 <a href="{% url 'category' 'HB' %}">
                     <div class="goodnessseccont text-center">
-                        <img src="{% static 'images/hairbutter.jpg' %}" class="img-responsive text-center" alt="">
+                        <div class="img-container d-flex justify-content-center">
+                            <img src="{% static 'images/hairbutter.jpg' %}" class="img-responsive mx-auto" alt="Hair Butter">
+                        </div>
                         <p class="mlkpro">Hair Butter</p>
                     </div>
                 </a>

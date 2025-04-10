@@ -41,7 +41,7 @@ class Customer(models.Model):
     locality = models.CharField(max_length=200)
     city = models.CharField(max_length=50)
     mobile = models.CharField(max_length=10)  
-
+    mail=models.EmailField(blank= True)
     zipcode= models.IntegerField()
     state = models.CharField(choices=STATE_CHOICES,max_length=100)
     def __str__(self):

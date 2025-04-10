@@ -70,7 +70,8 @@ urlpatterns = [
 
     path('password-reset-complete/',auth_view.PasswordResetCompleteView.as_view(template_name='app/password_reset_complete.html'),name='password_reset_complete'),
 
-
+    path('wishlist/', views.show_wishlist, name='wishlist'),
+    
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

@@ -116,15 +116,10 @@
               <!-- Sale badge if discounted -->
               {% if prod.discounted_price < prod.selling_price %}
               <div class="sale-badge">
-                {% with discount=prod.selling_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
-                {% with discounted=prod.discounted_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
-                {% with percentage=discount|add:"-"|add:discounted|add:"*100/"|add:discount %}
-                {{ percentage|floatformat:0 }}% OFF
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
+                {{ prod.discount_percent }}% OFF
               </div>
               {% endif %}
+              
               <!-- Quick action buttons -->
               <!--div-- class="product-actions">
                 <div class="btn-group">
@@ -185,8 +180,8 @@
 <style>
   /* Main colors */
   :root {
-    --primary-color: #6a11cb;
-    --gradient-end: #2575fc;
+    --primary-color:rgb(51, 50, 53);
+    --gradient-end:rgb(64, 66, 69);
     --text-color: #333;
     --light-bg: #f8f9fa;
     --accent-color: #ff6b6b;

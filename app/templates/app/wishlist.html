@@ -1,0 +1,111 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}My Wishlist{% endblock title %}
+
+{% block main-content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">My Wishlist</h2>
+            {% if wishlist_products %}
+            <div class="row">
+                {% for product in wishlist_products %}
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="position-relative">
+                            {% if product.discounted_price < product.selling_price %}
+                            <div class="position-absolute top-0 end-0 bg-danger text-white m-2 px-2 py-1 rounded-pill fs-6 fw-bold">
+                                {% with discount=product.selling_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
+                                {% with discounted=product.discounted_price|floatformat:0|slugify|add:"0"|stringformat:"i" %}
+                                {% with percentage=discount|add:"-"|add:discounted|add:"*100/"|add:discount %}
+                                {{ percentage|floatformat:0 }}% OFF
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                            </div>
+                            {% endif %}
+                            <a href="{% url 'product-detail' product.id %}">
+                                <img src="{{ product.product_image.url }}" class="card-img-top p-3" alt="{{ product.title }}" style="height: 200px; object-fit: contain;">
+                            </a>
+                        </div>
+                        <div class="card-body position-relative">
+                            <button pid="{{ product.id }}" class="minus-wishlist position-absolute top-0 end-0 btn btn-sm btn-danger rounded-circle mt-2 me-2" style="width: 30px; height: 30px;">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <h5 class="card-title text-truncate">{{ product.title }}</h5>
+                            <div class="mb-2">
+                                <span class="text-danger fw-bold">₹{{ product.discounted_price }}/-</span>
+                                {% if product.discounted_price < product.selling_price %}
+                                <span class="text-muted text-decoration-line-through ms-2">₹{{ product.selling_price }}/-</span>
+                                {% endif %}
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'product-detail' product.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                <form action="/add-to-cart" class="d-inline">
+                                    <input type="hidden" name="prod_id" value="{{ product.id }}" />
+                                    <button type="submit" class="btn btn-sm btn-primary w-100">
+                                        <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="far fa-heart fa-4x text-muted mb-3"></i>
+                <h4>Your wishlist is empty!</h4>
+                <p class="text-muted">Find your favorite hair products and add them to your wishlist.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary mt-3">Explore Products</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    // Remove from wishlist
+    $(".minus-wishlist").click(function(){
+        var id = $(this).attr("pid");
+        var btn = $(this);
+        
+        $.ajax({
+            url: "/minuswishlist",
+            type: "GET",
+            data: {
+                prod_id: id
+            },
+            success: function(data){
+                // Remove the product card with animation
+                btn.closest('.col-sm-6').fadeOut(300, function(){
+                    $(this).remove();
+                    
+                    // Check if wishlist is now empty
+                    if($('.col-sm-6').length === 0) {
+                        $('.row').html(`
+                            <div class="text-center py-5">
+                                <i class="far fa-heart fa-4x text-muted mb-3"></i>
+                                <h4>Your wishlist is empty!</h4>
+                                <p class="text-muted">Find your favorite hair products and add them to your wishlist.</p>
+                                <a href="{% url 'home' %}" class="btn btn-primary mt-3">Explore Products</a>
+                            </div>
+                        `);
+                    }
+                    
+                    // Update wishlist count in navbar
+                    var wishlistCount = parseInt($(".wishlist-count").text());
+                    if (wishlistCount > 1) {
+                        $(".wishlist-count").text(wishlist_count - 1);
+                    } else {
+                        $(".wishlist-count").hide();
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock main-content %}

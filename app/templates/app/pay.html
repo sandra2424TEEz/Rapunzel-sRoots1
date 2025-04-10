@@ -1,103 +1,97 @@
 {% extends 'app/base.html' %}
 {% load static %}
-{% block title %} buy now {% endblock title %}
-
-
-{% block usernav %}
-<li class="nav-item">
-  <a class="nav-link active" aria-current="page" href="/">Home</a>
-</li>
-
-<li class="nav-item dropdown mx-2">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Products
-  </a>
-
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'category' 'HO' %}">Hair Oil</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HS' %}">Hair Serum</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HM' %}">Hair Mask</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HC' %}">Hair Conditioner</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'SH' %}">Shampoo</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HB' %}">Hair Butter</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HD' %}">Hair Dye</a></li>
-    <li><a class="dropdown-item" href="{% url 'category' 'HT' %}">Hair Treatment</a></li>
-    
-  </ul>
-</li>
-<li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'about'  %}">About Us</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link text-white" href="{% url 'contact'  %}">Contact Us</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-</li>
-</ul>
-<form class="d-flex" role="search" action="/search">
-  <input class="form-control me-2" type="search" placeholder="Search"  name="search" aria-label="Search">
-  <button class="btn btn-outline-dark" type="submit">Search</button>
-</form>
-</div>
-<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-<li class="nav-item dropdown mx-2">
-  <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="fa-regular fa-user"></i> {{request.user}}
-
-  </a>
-  <ul class="dropdown-menu " aria-labelledby="profileDropdown" >
-      <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-      <li><a class="dropdown-item" href="{% url 'passwordchange' %}">Change Password</a></li>
-      <li><a class="dropdown-item" href="/logout/">Logout</a></li>
-  </ul>
-
-</li>
-<li class="nav-item mx-2">
-  <a href="{% url 'showcart' %}" class="nav-link text-white"><span class="badge bg-danger">{% if totalitem > 0 %}{{totalitem}}{% endif %}</span> <i class="fa-solid fa-cart-shopping"  ></i> </a>
-
-</li>
-<li class="nav-item mx-2">
-  <a href="" class="nav-link text-white"><span class="badge bg-danger">{% if  wishlist_count > 0 %}{{ wishlist_count}}{% endif %}</span> <i class="fa fa-heart"></i> </a>
-
-</li>
-{% endblock %}
-
+{% block title %}Payment{% endblock title %}
 
 {% block main-content %}
-<div class="text-center" style="margin-top:10%; "   ><b>Continue Your Payment</b>
-<button class="btn btn-warning" id="rzp-button1" style="color: rgb(255, 255, 255); background-color: rgb(10, 92, 1); display:flex; justify-content:center; align-items:center; margin-left:45% ; margin-top:2%; ">Pay with Razorpay</button></div>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-var options = {
-    "key": "rzp_test_9BZyJ3buu1pncT", // Enter the Key ID generated from the Dashboard
-    "amount": "{{amt}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "Neel dairy",
-    "description": "Test Transaction",
-    "image":"{% static 'images/neel.png' %}",
-    "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "callback_url": "http://127.0.0.1:8000/orders/",
-    "prefill": {
-        "name": "{{user}}",
-        "email": "gaurav.kumar@example.com",
-        "contact": "9000090000"
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "#3399cc"
-    }
-};
-var rzp1= new Razorpay(options);
-rzp1.on('payment.failed',function(response){
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h3 class="text-center">Payment Confirmation</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5 class="mb-3">Order Summary</h5>
+                        <p>Total Amount: <span class="fw-bold">₹{{ amt }}</span></p>
+                        <p>Transaction ID: <span class="fw-bold">{{ payment_id }}</span></p>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <h4>Choose Your Payment Method</h4>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card mb-3 payment-option">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-credit-card fa-3x mb-3 text-primary"></i>
+                                    <h5>Credit/Debit Card</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3 payment-option">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-university fa-3x mb-3 text-success"></i>
+                                    <h5>Net Banking</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form id="dummy-payment-form" action="{% url 'paymentdone' %}" method="GET">
+                                <!-- Hidden customer ID field - you should populate this with the actual customer ID -->
+                                <input type="hidden" name="cust_id" value="{{ request.user.customer_set.first.id }}">
+                                
+                                <div class="form-group mb-3">
+                                    <label for="cardNumber" class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" value="4111 1111 1111 1111" readonly>
+                                    <small class="text-muted">This is a dummy card number for testing purposes</small>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="expDate" class="form-label">Expiration Date</label>
+                                        <input type="text" class="form-control" id="expDate" placeholder="MM/YY" value="12/25" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" placeholder="123" value="123" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="nameOnCard" class="form-label">Name on Card</label>
+                                    <input type="text" class="form-control" id="nameOnCard" placeholder="John Doe" value="Test User" readonly>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success btn-lg">Complete Payment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <small class="text-muted">This is a dummy payment system for testing purposes.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
 
-});
-document.getElementById('rzp-button1').onclick = function(e){
-  console.log('button click');
-    rzp1.open();
-    e.preventDefault();
-}
+{% block payment-js %}
+<script>
+    // You could add some simple validation here if needed
+    document.getElementById('dummy-payment-form').addEventListener('submit', function(e) {
+        // In a real system, you might validate card details
+        // For this dummy system, we just submit the form
+        console.log('Processing dummy payment...');
+    });
 </script>
-{% endblock %}
+{% endblock payment-js %}

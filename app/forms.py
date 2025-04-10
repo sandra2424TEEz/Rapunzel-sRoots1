@@ -41,7 +41,7 @@ class ProductForm(forms.ModelForm):
 class CustomerProfileForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields=['name','locality','city','mobile','state','zipcode']
+        fields=['name','locality','city','mobile','state','zipcode','mail']
         widgets={
             'name':forms.TextInput(attrs={'class':'form-control'}),
             'locality':forms.TextInput(attrs={'class':'form-control'}),
@@ -49,5 +49,6 @@ class CustomerProfileForm(forms.ModelForm):
             'mobile':forms.NumberInput(attrs={'class':'form-control'}),
             'state':forms.Select(attrs={'class':'form-control'}),
             'zipcode':forms.NumberInput(attrs={'class':'form-control'}),
+            'mail': forms.EmailInput(attrs={'class': 'form-control'}),  # Fixed here
         }
 
